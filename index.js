@@ -26,8 +26,8 @@ function handleMessage(sender_psid, received_message) {
         "payload": {
           "template_type": "generic",
           "elements": [{
-            "title": "Is this the right picture?",
-            "subtitle": "Tap a button to answer.",
+            "title": "Apa ini foto nya?",
+            "subtitle": "Tap tombol untuk menjawab.",
             "image_url": attachment_url,
             "buttons": [
               {
@@ -83,7 +83,7 @@ function callSendAPI(sender_psid, response) {
   // Send the HTTP request to the Messenger Platform
   request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": "EAAFPdZCzzn8gBAFE5ONDxHT6hd8sDzfVdZCuJAkp4piJ9Y8pZAmkZCBHKIjyNJDNxIm4fJG9ikn9xwGc6vWJvt75RoOM6EyoLR0bxJV8S3MKWk2u19f9hi6XARE7Jy33xClRcvyoz9BzcYSRwcCLWIbPc2KcBWfdCvJAwOzZAuAZDZD" },
+    "qs": { "access_token": "EAAFPdZCzzn8gBAJBXE6YPRUtqm2ConGOtr0bpZAsLr2LH1cfoKqUUKeZBW0EX8GVMS52rYuvgGWOkWMdh9ZAF9joZAZB0NEh63CfZADZCBkOzSSVMFfkwQazvA5L5ZAZA8D4TeRHxNaZCpjqAY59GQZAe1RPyFP5oOcSH0RsahzlJZAHmBwZDZD" },
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {
