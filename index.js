@@ -2,7 +2,21 @@ const
   express = require('express'),
   bodyParser = require('body-parser'),
   request = require('request'),
+  RiveScript = require('rivescript'),
   app = express().use(bodyParser.json()); // creates express http server
+
+
+var bot = new RiveScript();
+bot.loadDirectory("./brain", successHandler, errorHandler);
+
+function errorHandler (loadcount, err) {
+  console.log("Error loading batch #" + loadcount + ": " + err + "\n");
+}
+
+function successHandler (loadcount) {
+  console.log("Load #" + loadcount + " completed!");
+  bot.sortReplies();
+}
 
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
@@ -11,9 +25,11 @@ function handleMessage(sender_psid, received_message) {
   // Check if the message contains text
   if (received_message.text) {    
 
+    var botResponse = bot.reply(sender_psid, received_message.text, this);
+
     // Create the payload for a basic text message
     response = {
-      "text": `Pesan kamu: "${received_message.text}". kirim aku foto dong!`
+      "text": botResponse
     }
   } else if (received_message.attachments) {
   
@@ -88,7 +104,7 @@ function callSendAPI(sender_psid, response) {
     "json": request_body
   }, (err, res, body) => {
     if (!err) {
-      console.log('message sent!')
+      console.log('message sent!');
     } else {
       console.error("Unable to send message:" + err);
     }
