@@ -3,6 +3,21 @@ const
   bodyParser = require('body-parser'),
   app = express().use(bodyParser.json()); // creates express http server
 
+// Handles messages events
+function handleMessage(sender_psid, received_message) {
+
+}
+
+// Handles messaging_postbacks events
+function handlePostback(sender_psid, received_postback) {
+
+}
+
+// Sends response messages via the Send API
+function callSendAPI(sender_psid, response) {
+  
+}
+
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
 
@@ -46,6 +61,10 @@ app.post('/webhook', (req, res) => {
       // will only ever contain one message, so we get index 0
       let webhookEvent = entry.messaging[0];
       console.log(webhookEvent);
+      // Get the sender PSID
+      let sender_psid = webhookEvent.sender.id;
+      console.log('Sender PSID: ' + sender_psid);
+      
     });
 
     // Returns a '200 OK' response to all requests
