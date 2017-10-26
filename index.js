@@ -15,7 +15,38 @@ function handleMessage(sender_psid, received_message) {
     response = {
       "text": `Pesan kamu: "${received_message.text}". kirim aku foto dong!`
     }
-  }  
+  } else if (received_message.attachments) {
+  
+    // Gets the URL of the message attachment
+    let attachment_url = received_message.attachments[0].payload.url;
+
+    response = {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "generic",
+          "elements": [{
+            "title": "Is this the right picture?",
+            "subtitle": "Tap a button to answer.",
+            "image_url": attachment_url,
+            "buttons": [
+              {
+                "type": "postback",
+                "title": "Ya!",
+                "payload": "yes",
+              },
+              {
+                "type": "postback",
+                "title": "Nggak!",
+                "payload": "no",
+              }
+            ],
+          }]
+        }
+      }
+    }
+  
+  } 
   
   // Sends the response message
   callSendAPI(sender_psid, response);
@@ -24,7 +55,19 @@ function handleMessage(sender_psid, received_message) {
 
 // Handles messaging_postbacks events
 function handlePostback(sender_psid, received_postback) {
+  let response;
+  
+  // Get the payload for the postback
+  let payload = received_postback.payload;
 
+  // Set the response based on the postback payload
+  if (payload === 'yes') {
+    response = { "text": "Makacih!" }
+  } else if (payload === 'no') {
+    response = { "text": "Emm, kirim foto yang lain." }
+  }
+  // Send the message to acknowledge the postback
+  callSendAPI(sender_psid, response);
 }
 
 // Sends response messages via the Send API
