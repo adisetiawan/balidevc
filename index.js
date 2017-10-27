@@ -5,6 +5,9 @@ const
   RiveScript = require('rivescript'),
   app = express().use(bodyParser.json()); // creates express http server
 
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+
 
 var bot = new RiveScript();
 bot.loadDirectory("./brain", successHandler, errorHandler);
@@ -99,7 +102,7 @@ function callSendAPI(sender_psid, response) {
   // Send the HTTP request to the Messenger Platform
   request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": "EAAFPdZCzzn8gBAJBXE6YPRUtqm2ConGOtr0bpZAsLr2LH1cfoKqUUKeZBW0EX8GVMS52rYuvgGWOkWMdh9ZAF9joZAZB0NEh63CfZADZCBkOzSSVMFfkwQazvA5L5ZAZA8D4TeRHxNaZCpjqAY59GQZAe1RPyFP5oOcSH0RsahzlJZAHmBwZDZD" },
+    "qs": { "access_token": PAGE_ACCESS_TOKEN },
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {
@@ -113,9 +116,6 @@ function callSendAPI(sender_psid, response) {
 
 // Adds support for GET requests to our webhook
 app.get('/webhook', (req, res) => {
-
-  // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "GZmM1UkUz1"
     
   // Parse the query params
   let mode = req.query['hub.mode'];
