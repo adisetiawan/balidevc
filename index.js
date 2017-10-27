@@ -3,11 +3,41 @@ const
   bodyParser = require('body-parser'),
   request = require('request'),
   RiveScript = require('rivescript'),
-  app = express().use(bodyParser.json()); // creates express http server
+  crypto = require('crypto'),
+  app = express().use(bodyParser.json({ verify: verifyRequest })); 
+
+  app.use(abortOnError);
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+const APP_SECRET = process.env.APP_SECRET;
 
+// Calculate the X-Hub-Signature header value.
+function getSignature(buf) {
+  var hmac = crypto.createHmac("sha1", APP_SECRET);
+  hmac.update(buf, "utf-8");
+  return "sha1=" + hmac.digest("hex");
+}
+
+function verifyRequest(req, res, buf, encoding) {
+  var expected = req.headers['x-hub-signature'];
+  var calculated = getSignature(buf);
+  console.log("X-Hub-Signature:", expected, "Content:", "-" + buf.toString('utf8') + "-");
+  if (expected !== calculated) {
+    throw new Error("Invalid signature.");
+  } else {
+    console.log("Valid signature!");
+  }
+}
+
+function abortOnError(err, req, res, next) {
+  if (err) {
+    console.log(err);
+    res.status(400).send({ error: "Invalid signature." });
+  } else {
+    next();
+  }
+}
 
 var bot = new RiveScript();
 bot.loadDirectory("./brain", successHandler, errorHandler);
